@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Марина Соколова — Bonbonnière Céleste</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #fdf6ee;
+      --blush:   #e8c9b5;
+      --rose:    #c0725a;
+      --plum:    #5c2d3e;
+      --gold:    #b8924a;
+      --ink:     #2a1a20;
+      --mist:    rgba(92,45,62,.06);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      background-color: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom cursor ── */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--rose);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform .15s ease, width .2s ease, height .2s ease, opacity .2s ease;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform .4s cubic-bezier(.25,.46,.45,.94), opacity .3s ease;
+      opacity: .6;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: .5;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      background: var(--plum);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(3rem,8vw,7rem) clamp(2.5rem,5vw,5rem);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      right: -60px; top: 0; bottom: 0;
+      width: 120px;
+      background: var(--plum);
+      clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%);
+      z-index: 3;
+    }
+
+    .logo-line {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(.65rem,.9vw,.85rem);
+      letter-spacing: .35em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp .8s .2s ease forwards;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3rem,5.5vw,6rem);
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp .8s .4s ease forwards;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--blush);
+    }
+
+    .hero-title {
+      font-size: clamp(.78rem,1vw,.9rem);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--blush);
+      opacity: 0;
+      animation: fadeUp .8s .6s ease forwards;
+      margin-bottom: 3rem;
+    }
+
+    .divider {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: growLine .8s .7s ease forwards;
+    }
+
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+      opacity: 0;
+      animation: fadeUp .8s .85s ease forwards;
+    }
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--blush);
+      font-size: clamp(.8rem,.95vw,.9rem);
+      letter-spacing: .05em;
+    }
+    .contact-list li span.icon {
+      color: var(--gold);
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+    }
+    .contact-list a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .25s, border-color .25s;
+    }
+    .contact-list a:hover {
+      color: var(--cream);
+      border-color: var(--gold);
+    }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      background: var(--cream);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(3rem,6vw,5rem) clamp(3rem,7vw,7rem);
+      z-index: 1;
+    }
+
+    .decor-circle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .dc1 {
+      width: 340px; height: 340px;
+      border: 1px solid var(--blush);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: .5;
+      animation: spinSlow 20s linear infinite;
+    }
+    .dc2 {
+      width: 240px; height: 240px;
+      border: 1px dashed var(--gold);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: .35;
+      animation: spinSlow 14s linear infinite reverse;
+    }
+
+    .monogram {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 1s 1s ease forwards;
+    }
+    .monogram-letter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(7rem,12vw,13rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--rose);
+      line-height: 1;
+      position: relative;
+    }
+    .monogram-letter::after {
+      content: 'M';
+      position: absolute;
+      left: 6px; top: 6px;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--gold);
+      opacity: .3;
+    }
+    .monogram-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(.75rem,.95vw,.9rem);
+      letter-spacing: .5em;
+      color: var(--plum);
+      text-transform: uppercase;
+      margin-top: .5rem;
+    }
+
+    /* ── SECTION common ── */
+    section {
+      padding: clamp(4rem,8vw,8rem) clamp(1.5rem,8vw,10rem);
+    }
+
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.2rem,4vw,3.8rem);
+      color: var(--plum);
+      line-height: 1.15;
+      margin-bottom: 2rem;
+    }
+    h2 em { font-style: italic; color: var(--rose); }
+
+    p {
+      font-size: clamp(.85rem,1.1vw,1rem);
+      line-height: 1.85;
+      color: #4a3540;
+      max-width: 56ch;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem,6vw,6rem);
+      align-items: center;
+    }
+
+    .about-photo {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(145deg, var(--blush) 0%, var(--plum) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      font-style: italic;
+      color: rgba(255,255,255,.25);
+      user-select: none;
+    }
+    .about-photo::before {
+      content: '';
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255,255,255,.25);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .about-text { padding: 1rem 0; }
+    .about-text p + p { margin-top: 1.2rem; }
+
+    /* ── SPECIALTIES ── */
+    .specialties {
+      background: var(--plum);
+      color: var(--cream);
+    }
+    .specialties .section-label { color: var(--gold); }
+    .specialties h2 { color: var(--cream); }
+    .specialties h2 em { color: var(--blush); }
+    .specialties p { color: var(--blush); max-width: 100%; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .card {
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 2.2rem 1.8rem;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: background .3s, transform .3s;
+      cursor: none;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--rose);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      z-index: 0;
+    }
+    .card:hover::before { transform: scaleY(1); }
+    .card:hover { transform: translateY(-4px); }
+    .card > * { position: relative; z-index: 1; }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: .6rem;
+    }
+    .card p {
+      font-size: .82rem;
+      color: rgba(253,246,238,.6);
+      line-height: 1.7;
+    }
+    .card:hover p { color: rgba(253,246,238,.85); }
+
+    /* ── BRANDS ── */
+    .brands {
+      background: var(--cream);
+      text-align: center;
+    }
+    .brands h2 { margin: 0 auto 1rem; }
+    .brands > p { margin: 0 auto 3.5rem; text-align: center; }
+
+    .brand-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 3rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .brand-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem,2vw,1.7rem);
+      font-weight: 300;
+      color: var(--plum);
+      letter-spacing: .1em;
+      opacity: .5;
+      transition: opacity .3s;
+      cursor: none;
+    }
+    .brand-tag:hover { opacity: 1; }
+
+    /* ── CTA BANNER ── */
+    .cta {
+      background: linear-gradient(135deg, var(--rose) 0%, var(--plum) 100%);
+      text-align: center;
+      padding: clamp(4rem,7vw,7rem) 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '✦';
+      position: absolute;
+      font-size: 30vw;
+      color: rgba(255,255,255,.04);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+      font-family: serif;
+    }
+    .cta .section-label { color: rgba(255,255,255,.55); margin-bottom: 1.5rem; }
+    .cta h2 { color: #fff; max-width: 18ch; margin: 0 auto 1.5rem; }
+    .cta h2 em { color: var(--blush); }
+    .cta > p { color: rgba(255,255,255,.7); margin: 0 auto 2.8rem; text-align: center; }
+
+    .btn {
+      display: inline-block;
+      padding: 1rem 2.8rem;
+      border: 1px solid #fff;
+      color: #fff;
+      font-family: 'Jost', sans-serif;
+      font-size: .75rem;
+      font-weight: 300;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .35s;
+      cursor: none;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      z-index: 0;
+    }
+    .btn:hover::before { transform: scaleX(1); }
+    .btn:hover { color: var(--plum); }
+    .btn span { position: relative; z-index: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 2.5rem clamp(1.5rem,8vw,10rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: .15em;
+      color: var(--gold);
+    }
+    .footer-copy {
+      font-size: .72rem;
+      letter-spacing: .15em;
+      color: rgba(253,246,238,.3);
+      text-transform: uppercase;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes growLine {
+      from { opacity: 0; width: 0; }
+      to   { opacity: 1; width: 60px; }
+    }
+    @keyframes spinSlow {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to   { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left::after { display: none; }
+      .hero-right { min-height: 45vw; }
+      .about { grid-template-columns: 1fr; }
+      .about-photo { max-width: 340px; margin: 0 auto; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+  <div class="hero-left">
+    <p class="logo-line">Bonbonnière Céleste · Кондитерский дом</p>
+
+    <h1 class="hero-name">
+      Марина<br><em>Соколова</em>
+    </h1>
+    <p class="hero-title">Региональный представитель &nbsp;·&nbsp; Москва &amp; ЦФО</p>
+
+    <div class="divider"></div>
+
+    <ul class="contact-list">
+      <li>
+        <span class="icon">✉</span>
+        <a href="mailto:m.sokolova@bonbonniere.ru">m.sokolova@bonbonniere.ru</a>
+      </li>
+      <li>
+        <span class="icon">✆</span>
+        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+      </li>
+      <li>
+        <span class="icon">◈</span>
+        <span>ул. Кузнецкий Мост, 19, офис 4</span>
+      </li>
+      <li>
+        <span class="icon">◉</span>
+        <a href="#">bonbonniere-celeste.ru</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="hero-right">
+    <div class="decor-circle dc1"></div>
+    <div class="decor-circle dc2"></div>
+    <div class="monogram">
+      <div class="monogram-letter">M</div>
+      <div class="monogram-sub">Bonbonnière Céleste</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section class="about">
+  <div class="about-photo reveal">
+    <div class="photo-placeholder">
+      <span class="photo-monogram">МС</span>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <p class="section-label">О представителе</p>
+    <h2>Искусство <em>сладкого</em> мира</h2>
+    <p>
+      Марина — лицо бренда Bonbonnière Céleste в Центральном федеральном округе. 
+      Более 10 лет она выстраивает партнёрские отношения с ведущими сетями 
+      розничной торговли, кафе и event-агентствами.
+    </p>
+    <p>
+      Её экспертиза охватывает весь ассортимент кондитерского дома: от бельгийских 
+      трюфелей ручной работы до авторских тортов с сезонными ингредиентами. 
+      Марина помогает клиентам подбирать коллекции под любой формат мероприятия 
+      или деловой подарок.
+    </p>
+    <p>
+      Подход — честный диалог, глубокое знание продукта и искренняя любовь 
+      к тому, что она представляет.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════ SPECIALTIES ═══════════════ -->
+<section class="specialties">
+  <p class="section-label">Чем я занимаюсь</p>
+  <h2>Направления <em>работы</em></h2>
+  <p>Полный цикл — от первой дегустации до финального оформления заказа.</p>
+
+  <div class="cards">
+    <div class="card reveal">
+      <span class="card-icon">🍫</span>
+      <p class="card-title">B2B продажи</p>
+      <p>Долгосрочные договоры с ресторанами, отелями, корпоративными клиентами и торговыми сетями.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">🎁</span>
+      <p class="card-title">Корпоративные подарки</p>
+      <p>Индивидуальная упаковка с брендингом, подборка коллекций к праздникам и деловым мероприятиям.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">🎂</span>
+      <p class="card-title">Catering & Events</p>
+      <p>Кондитерские столы, десертные меню, sweet-bar для свадеб, презентаций и гала-ужинов.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">📦</span>
+      <p class="card-title">Оптовые поставки</p>
+      <p>Регулярные поставки в розничные точки с гибкими условиями и поддержкой мерчандайзинга.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ BRANDS ═══════════════ -->
+<section class="brands">
+  <p class="section-label">Партнёры</p>
+  <h2 class="reveal">Они уже <em>доверяют</em></h2>
+  <p class="reveal">Среди клиентов — рестораторы, отельеры и ведущие event-компании Москвы.</p>
+  <div class="brand-logos reveal">
+    <span class="brand-tag">Grand Velours Hotel</span>
+    <span class="brand-tag">La Maison Café</span>
+    <span class="brand-tag">Prestige Events</span>
+    <span class="brand-tag">Domus Gourmet</span>
+    <span class="brand-tag">Orchidée Patisserie</span>
+    <span class="brand-tag">Meridian Plaza</span>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="cta">
+  <p class="section-label">Связаться</p>
+  <h2 class="reveal">Начнём <em>сладкое</em> сотрудничество?</h2>
+  <p class="reveal">Напишите или позвоните — расскажу об ассортименте, условиях и ближайших дегустациях.</p>
+  <a href="mailto:m.sokolova@bonbonniere.ru" class="btn reveal"><span>Написать Марине</span></a>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <span class="footer-brand">Bonbonnière Céleste</span>
+  <span class="footer-copy">© 2026 · Все права защищены</span>
+</footer>
+
+<script>
+  /* Custom cursor */
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cur.style.left  = e.clientX + 'px';
+    cur.style.top   = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  });
+
+  /* Scroll reveal */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
